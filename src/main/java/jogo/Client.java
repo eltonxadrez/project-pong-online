@@ -1,7 +1,9 @@
 package jogo;
 
+import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.Scanner;
@@ -14,6 +16,10 @@ public class Client {
 	private static final String RECONECTAR = "SIM";
 	private static final String ENCERRAR = "NÃO";
 	
+	public static void main(String[] args) {
+		new Client();
+	}
+	
 	public Client() {
 		in = new Scanner(System.in);
 		this.init();
@@ -23,14 +29,29 @@ public class Client {
 		try {
 			socket = new Socket("127.0.0.1", Server.PORT);
 			out = new DataOutputStream(socket.getOutputStream());
+			
+	        new Thread(() -> {
+	        	BufferedReader inBuff = null;
+				try {
+					inBuff = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+	            String msg;
+	            try {
+	                while ((msg = inBuff.readLine()) != null) {
+	                    System.out.println(msg);
+	                }
+	            } catch (IOException e) {
+	                e.printStackTrace();
+	            }
+	        }).start();
+	        
 			writeMessage();
 		} catch (UnknownHostException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
 			System.out.println("O Servidor está indisponivel");
-			
-			
-			
 //			socket.connect();
 //			SocketAddress
 //			tratativaErroConexao();
@@ -109,7 +130,5 @@ public class Client {
 		}
 	}
 	
-	public static void main(String[] args) {
-		new Client();
-	}
+
 }

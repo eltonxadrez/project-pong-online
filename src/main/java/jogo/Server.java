@@ -1,21 +1,25 @@
 package jogo;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Scanner;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class Server {
 	
 	private ServerSocket server;
-	public static final int PORT = 3030;
+	public static final int PORT = 12345;
 	public static final String STOP_STRING = "##";
 	public static final String BLOCK_CLIENTS = "BB";
 	public static final String ALLOW_CLIENTS = "AA";
 	public static final String SHUTDOWN = "XX";
 	private Scanner scn;
 	public AtomicBoolean clientsFlag = new AtomicBoolean();
+	private static final Set<PrintWriter> clientes = ConcurrentHashMap.newKeySet();
 	
 	public Server() {
 		System.out.println("SERVIDOR INICIADO");
@@ -51,6 +55,11 @@ public class Server {
 				}
 				
 			}).start();	
+			new Thread(()->{
+				while(true) {
+					
+				}
+			}).start();
 			System.out.println("INICIANDO ABERTURA DE CONEXOES");
 			while (clientsFlag.get()) {
 				iniConnections();	
@@ -72,7 +81,8 @@ public class Server {
 			new Thread(()->{
 				System.out.println("Cliente login");
 				ConnectedClient client = new ConnectedClient(clientSocket);
-				client.readMessage(clientsFlag);
+				clientes.add(client.out);
+				client.readMessage(clientsFlag, clientes);
 				client.close();
 				System.out.println("Cliente logoff");
 			}).start();			
