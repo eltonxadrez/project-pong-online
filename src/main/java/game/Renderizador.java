@@ -5,10 +5,12 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
@@ -26,7 +28,8 @@ public class Renderizador extends Canvas{
 	public JFrame jFrame;
 	
 	//apenas para teste background
-	private BufferedImage tileImage;
+//	private BufferedImage tileImage;
+	private Image image;
 	
 	public ArrayList<Concreto> elementosRenderizadosList;
 
@@ -39,7 +42,10 @@ public class Renderizador extends Canvas{
 		this.width = width;
 		this.height = height;
 		try {
-			tileImage = ImageIO.read(new File("resources/sprites/background/background_java_version.png"));
+//			tileImage = ImageIO.read(new File("/game/ui/sprites/background/background_java_version.png"));
+//			image = ImageIO.read(getClass().getResource("/sprites/background/background_java_version.png"));
+			InputStream file = getClass().getResourceAsStream("/background/background_java_version.png");
+			this.image = ImageIO.read(file);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -77,7 +83,7 @@ public class Renderizador extends Canvas{
 //		this.graphics2d.fillRect(this.height/2, 0, 1, this.width);
 		
 		//background
-		this.graphics2d.drawImage(tileImage, 0, 0, 2255, 1673, null);
+		this.graphics2d.drawImage(image, 0, 0, 2255, 1673, null);
 		
 		graphics2d.setColor(Color.BLACK);
 		graphics2d.fillRect(10, 610, 990, 110);

@@ -13,7 +13,7 @@ public class Regra implements Entity, Runnable {
 	private boolean isMoving = false;
 	
 	
-	public int velocidadeTick = 60;
+	public int velocidadeTick = 30;
 //	private final int frameDuration = 10;
 	
 	
